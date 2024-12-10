@@ -1,4 +1,4 @@
-﻿<#
+<#
     Author: John Kerski
     Description: This script:
         1) Creates Build and Development workspaces in Power BI
@@ -103,6 +103,14 @@ Write-Host "Development Workspace ID: $($DevWSObj.Id.Guid)"
 
 ### Now Setup Azure DevOps
 $LogInfo = az login | ConvertFrom-Json
+
+if(!$LogInfo) {
+    Write-Error "Unable to login to Azure DevOps"
+    return
+}
+
+# Assume we get the default
+$LogInfo = $LogInfo | Where-Object {$_.isDefault -eq $TRUE}
 
 Write-Host -ForegroundColor Cyan "Step 2 of 5: Creating Azure DevOps project"
 #Assumes organization name matches $LogInfo.name and url for Azure DevOps Service is https://dev.azure.com
